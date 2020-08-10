@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="info">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %t %-5level %logger{30}.%method - %msg%n" />
+        </Console>
+
+        <!--默认按天&按512M文件大小切分日志，默认最多保留30个日志文件，非阻塞模式-->
+        <File name="infoAppender" fileName="info.log" sizeBasedTriggeringSize="512M"
+                 rolloverMax="30">
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </File>
+
+        <File name="warnAppender" fileName="warn.log" sizeBasedTriggeringSize="512M"
+                 rolloverMax="30">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </File>
+
+        <File name="errorAppender" fileName="error.log" sizeBasedTriggeringSize="512M"
+                 rolloverMax="30">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+        </File>
+
+    </appenders>
+
+    <loggers>
+        <root level="info">
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+</configuration>
