@@ -33,7 +33,7 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BizException.class)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    protected ApiResult bizExceptionHandler(BizException e, HttpServletRequest request) {
+    protected ApiResult<?> bizExceptionHandler(BizException e, HttpServletRequest request) {
         LOGGER.warn("controller error, request: {}, code：{}, msg：{}", request.getRequestURI(), e.getCode(), e.getMessage());
         return ApiResult.newResult(e.getCode(), e.getMessage(), e.getData());
     }

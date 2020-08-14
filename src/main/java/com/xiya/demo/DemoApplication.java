@@ -12,7 +12,8 @@ import org.springframework.context.annotation.ImportResource;
  */
 @ImportResource({"classpath:applicationContext.xml"})
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-@EnableAspectJAutoProxy(proxyTargetClass=true)public class DemoApplication {
+@EnableAspectJAutoProxy(proxyTargetClass=true)
+public class DemoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
