@@ -1,6 +1,8 @@
 package com.xiya.demo.config;
 
+import com.xiya.demo.controller.interceptor.ClientInfoInterceptor;
 import com.xiya.demo.controller.interceptor.UserTokenAuthInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,9 +16,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class TokenInterceptorConfigure implements WebMvcConfigurer {
 
+
+    @Bean
+    public UserTokenAuthInterceptor userTokenAuthInterceptor() {
+        return new UserTokenAuthInterceptor();
+    }
+
+    @Bean
+    public ClientInfoInterceptor clientInfoInterceptor() {
+        return new ClientInfoInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new UserTokenAuthInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(userTokenAuthInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(clientInfoInterceptor()).addPathPatterns("/**");
 
     }
 }
