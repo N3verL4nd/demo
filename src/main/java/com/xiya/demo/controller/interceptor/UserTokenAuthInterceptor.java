@@ -1,8 +1,8 @@
 package com.xiya.demo.controller.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import com.xiya.demo.annotations.ApiLogin;
 import com.xiya.demo.enumtype.ServerCode;
+import com.xiya.demo.util.JSONUtil;
 import com.xiya.demo.util.UserTokenThreadLocal;
 import com.xiya.demo.util.UserTokenUtil;
 import com.xiya.demo.vo.ApiResult;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -56,7 +55,7 @@ public class UserTokenAuthInterceptor extends HandlerInterceptorAdapter {
     private void write(HttpServletResponse res, ServerCode serverCode) throws IOException {
         res.setContentType("application/json;charset=UTF-8");
         Writer writer = res.getWriter();
-        writer.write(JSON.toJSONString(ApiResult.newResult(serverCode)));
+        writer.write(JSONUtil.toJson(ApiResult.newResult(serverCode)));
     }
 
     @Override
