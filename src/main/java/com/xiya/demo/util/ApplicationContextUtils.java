@@ -5,6 +5,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ApplicationContextUtils implements ApplicationContextAware {
@@ -28,4 +34,8 @@ public class ApplicationContextUtils implements ApplicationContextAware {
         return applicationContext.getBean(clazz);
     }
 
+    public List<Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
+        Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(annotationType);
+        return new ArrayList<>(beansWithAnnotation.values());
+    }
 }
