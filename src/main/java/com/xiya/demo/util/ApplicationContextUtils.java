@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ApplicationContextUtils implements ApplicationContextAware {
+
     private ApplicationContext applicationContext;
 
 
