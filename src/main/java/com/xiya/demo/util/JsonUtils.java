@@ -5,11 +5,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.xiya.demo.exception.JsonDeserializedException;
+import com.xiya.demo.exception.JsonSerializedException;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.IOException;
 
 public class JsonUtils {
-    
+
     private static ObjectMapper mapper;
 
     static {
@@ -25,15 +28,51 @@ public class JsonUtils {
         // mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
     }
 
-    public static String toJson(Object object) throws IOException {
-        return mapper.writeValueAsString(object);
-    }
-    
-    public static <T> T fromJson(String json, Class<T> clazz) throws IOException {
-        return mapper.readValue(json, clazz);
+    public ObjectMapper getObjectMapper() {
+        return SerializationUtils.clone(mapper);
     }
 
-    public static <T> T fromJson(String json, TypeReference<T> typeReference) throws IOException {
-        return mapper.readValue(json, typeReference);
+    /**
+     * Object可以是POJO，也可以是Collection或数组。 如果对象为Null, 返回"null". 如果集合为空集合, 返回"[]".
+     */
+    public String toJson(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (IOException e) {
+            throw new JsonSerializedException("Serialized Object to json string error : " + object, e);
+        }
+    }
+
+    public String toPrettyJson(Object object) {
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (IOException e) {
+            throw new JsonSerializedException("Serialized Object to json string error : " + object, e);
+        }
+    }
+
+    /**
+     * 反序列化POJO或简单Collection如List<String>. 如果JSON字符串为Null或"null"字符串, 返回Null.
+     * 如果JSON字符串为"[]", 返回空集合. 如需反序列化复杂Collection如List<MyBean>,
+     * 请使用fromJson(String,JavaType)
+     */
+    public <T> T fromJson(String jsonString, Class<T> clazz) {
+        if (jsonString == null || "".equals(jsonString.trim())) {
+            return null;
+        }
+        try {
+            return mapper.readValue(jsonString, clazz);
+        } catch (IOException e) {
+            throw new JsonDeserializedException("Deserialized json string error : " + jsonString, e);
+        }
+    }
+
+    public <T> T fromJson(String jsonString, TypeReference<T> typeReference) {
+
+        try {
+            return mapper.readValue(jsonString, typeReference);
+        } catch (IOException e) {
+            throw new JsonDeserializedException("Deserialized json string error : " + jsonString, e);
+        }
     }
 }
